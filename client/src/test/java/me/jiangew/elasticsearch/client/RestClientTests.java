@@ -11,6 +11,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -18,17 +19,18 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Author: Jiangew
  * Date: 14/09/2017
  */
 public class RestClientTests {
-    private Log log = LogFactory.getLog(RestClientTests.class);
+    private static final Log log = LogFactory.getLog(RestClientTests.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    private Map<String, String> emptyParams = Collections.emptyMap();
+    //    private Map<String, String> emptyParams = Collections.emptyMap();
     private Map<String, String> singletonParams = Collections.singletonMap("pretty", "true");
 
     // Define what needs to happen when the request is successfully performed
@@ -56,22 +58,24 @@ public class RestClientTests {
     private RestClientBuilder builder = Builder.builder();
 
     private void handleResponse(Response response) throws Exception {
-        int statusCode = response.getStatusLine().getStatusCode();
-        String responseBody = EntityUtils.toString(response.getEntity());
+        final int statusCode = response.getStatusLine().getStatusCode();
+        final String responseBody = EntityUtils.toString(response.getEntity());
 
-        assertEquals(200, statusCode);
+        assertEquals(200, statusCode, "response code");
+//        assertTrue(statusCode == 200, "statusCode: " + statusCode + ",responseBody: " + responseBody);
         log.info(responseBody);
     }
 
-    private void handleRequestAsync() throws Exception {
+    @Test
+    void handleRequestAsync() throws Exception {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("user", "JamesiWork");
         jsonObject.addProperty("postDate", "2013-01-30");
         jsonObject.addProperty("message", "trying out Elasticsearch");
         HttpEntity entity = new NStringEntity(jsonObject.toString(), ContentType.APPLICATION_JSON);
 
-        // rest client
-        RestClient restClient = Builder.builder().build();
+        builder = Builder.setHttpClientConfigCallback(builder);
+        RestClient restClient = builder.build();
 
         final CountDownLatch latch = new CountDownLatch(5);
         for (int i = 0; i < 5; i++) {
@@ -101,6 +105,7 @@ public class RestClientTests {
     }
 
     @Test
+    @DisplayName("Get index document by id")
     void performRequestWithParams() throws Exception {
         builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
@@ -111,6 +116,7 @@ public class RestClientTests {
     }
 
     @Test
+    @DisplayName("Get index document by id async")
     void performRequestWithParamsAsync() throws Exception {
         builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
