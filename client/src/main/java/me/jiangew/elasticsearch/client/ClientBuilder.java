@@ -13,10 +13,12 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 
 /**
+ * Desc: Client Builder
+ * <p>
  * Author: Jiangew
  * Date: 14/09/2017
  */
-public class Builder {
+public class ClientBuilder {
 
     public static RestClient client() {
 

@@ -1,8 +1,9 @@
-package me.jiangew.elasticsearch.client;
+package me.jiangew.elasticsearch.client.low;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import me.jiangew.elasticsearch.client.ClientBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -19,14 +20,15 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
+ * Desc: Low Level Client Test
+ * <p>
  * Author: Jiangew
  * Date: 14/09/2017
  */
-public class RestClientTests {
-    private static final Log log = LogFactory.getLog(RestClientTests.class);
+public class RestClientTest {
+    private static final Log log = LogFactory.getLog(RestClientTest.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -41,13 +43,13 @@ public class RestClientTests {
             try {
                 handleResponse(response);
             } catch (Exception e) {
-                log.error(e);
+                log.error("asynchronous response listener onSuccess", e);
             }
         }
 
         @Override
         public void onFailure(Exception e) {
-            log.error(e);
+            log.error("asynchronous response listener onFailure", e);
         }
     };
 
@@ -55,7 +57,12 @@ public class RestClientTests {
     // When not provided, the default implementation is used which buffers the whole response body in heap memory, up to 100 MB.
     private HttpAsyncResponseConsumerFactory.HeapBufferedResponseConsumerFactory consumerFactory = new HttpAsyncResponseConsumerFactory.HeapBufferedResponseConsumerFactory(30 * 1024 * 1024);
 
-    private RestClientBuilder builder = Builder.builder();
+    private static RestClientBuilder builder;
+
+    static {
+        builder = ClientBuilder.builder();
+        builder = ClientBuilder.setHttpClientConfigCallback(builder);
+    }
 
     private void handleResponse(Response response) throws Exception {
         final int statusCode = response.getStatusLine().getStatusCode();
@@ -63,7 +70,7 @@ public class RestClientTests {
 
         assertEquals(200, statusCode, "response code");
 //        assertTrue(statusCode == 200, "statusCode: " + statusCode + ",responseBody: " + responseBody);
-        log.info(responseBody);
+        log.info(String.format("response body: %s", responseBody));
     }
 
     @Test
@@ -74,7 +81,6 @@ public class RestClientTests {
         jsonObject.addProperty("message", "trying out Elasticsearch");
         HttpEntity entity = new NStringEntity(jsonObject.toString(), ContentType.APPLICATION_JSON);
 
-        builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
 
         final CountDownLatch latch = new CountDownLatch(5);
@@ -107,7 +113,6 @@ public class RestClientTests {
     @Test
     @DisplayName("Get index document by id")
     void performRequestWithParams() throws Exception {
-        builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
         Response response = restClient.performRequest("GET", "/twitter/doc/1", singletonParams);
         handleResponse(response);
@@ -118,14 +123,12 @@ public class RestClientTests {
     @Test
     @DisplayName("Get index document by id async")
     void performRequestWithParamsAsync() throws Exception {
-        builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
         restClient.performRequestAsync("GET", "/twitter/doc/1", singletonParams, responseListener);
     }
 
     @Test
     void performRequestWithHeaders() throws Exception {
-        builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
         Response response = restClient.performRequest("GET", "/twitter/doc/1", singletonParams, new BasicHeader("Content-Type", "application/json"));
         handleResponse(response);
@@ -135,7 +138,6 @@ public class RestClientTests {
 
     @Test
     void performRequestWithHeadersAsync() throws Exception {
-        builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
         restClient.performRequestAsync("GET", "/twitter/doc/1", singletonParams, responseListener, new BasicHeader("Content-Type", "application/json"));
     }
@@ -148,8 +150,7 @@ public class RestClientTests {
         jsonObject.addProperty("message", "ELK: Elasticsearch Logstash Kibana");
         HttpEntity entity = new NStringEntity(jsonObject.toString(), ContentType.APPLICATION_JSON);
 
-        builder = Builder.setHttpClientConfigCallback(builder);
-        builder = Builder.setDefaultHeaders(builder);
+        builder = ClientBuilder.setDefaultHeaders(builder);
         RestClient restClient = builder.build();
         Response response = restClient.performRequest("PUT", "/twitter/doc/6", singletonParams, entity);
         handleResponse(response);
@@ -165,15 +166,13 @@ public class RestClientTests {
         jsonObject.addProperty("message", "ELK: Elasticsearch Logstash Kibana");
         HttpEntity entity = new NStringEntity(gson.toJson(jsonObject), ContentType.APPLICATION_JSON);
 
-        builder = Builder.setHttpClientConfigCallback(builder);
-        builder = Builder.setDefaultHeaders(builder);
+        builder = ClientBuilder.setDefaultHeaders(builder);
         RestClient restClient = builder.build();
         restClient.performRequestAsync("PUT", "/twitter/doc/6", singletonParams, entity, responseListener);
     }
 
     @Test
     void performRequestWithConsumerFact() throws Exception {
-        builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
         // Send a request by providing optional request body,
         // and the optional factory that is used to create an org.apache.http.nio.protocol.HttpAsyncResponseConsumer callback instance per request attempt.
@@ -185,7 +184,6 @@ public class RestClientTests {
 
     @Test
     void performRequestWithConsumerFactAsync() throws Exception {
-        builder = Builder.setHttpClientConfigCallback(builder);
         RestClient restClient = builder.build();
         restClient.performRequestAsync("GET", "/twitter/_search", singletonParams, null, consumerFactory, responseListener);
     }
@@ -214,8 +212,7 @@ public class RestClientTests {
 
         HttpEntity entity = new NStringEntity(range, ContentType.APPLICATION_JSON);
 
-        builder = Builder.setHttpClientConfigCallback(builder);
-        builder = Builder.setDefaultHeaders(builder);
+        builder = ClientBuilder.setDefaultHeaders(builder);
         RestClient restClient = builder.build();
         // Send a request by providing optional request body,
         // and the optional factory that is used to create an org.apache.http.nio.protocol.HttpAsyncResponseConsumer callback instance per request attempt.
