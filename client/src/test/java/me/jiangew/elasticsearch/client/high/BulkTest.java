@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * Date: 15/09/2017
  */
 public class BulkTest {
-    private static final Log logger = LogFactory.getLog(DeleteTest.class);
+    private static final Log logger = LogFactory.getLog(BulkTest.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
