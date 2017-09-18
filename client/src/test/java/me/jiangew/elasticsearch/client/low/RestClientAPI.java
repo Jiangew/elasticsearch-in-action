@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Author: Jiangew
  * Date: 14/09/2017
  */
-public class RestClientTest {
-    private static final Log log = LogFactory.getLog(RestClientTest.class);
+public class RestClientAPI {
+    private static final Log log = LogFactory.getLog(RestClientAPI.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

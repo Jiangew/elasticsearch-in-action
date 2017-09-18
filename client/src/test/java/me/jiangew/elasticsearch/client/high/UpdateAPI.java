@@ -33,8 +33,8 @@ import java.util.Map;
  * Author: Jiangew
  * Date: 15/09/2017
  */
-public class UpdateTest {
-    private static final Log log = LogFactory.getLog(UpdateTest.class);
+public class UpdateAPI {
+    private static final Log log = LogFactory.getLog(UpdateAPI.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

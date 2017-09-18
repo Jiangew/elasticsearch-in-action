@@ -32,8 +32,8 @@ import java.util.Map;
  * Author: Jiangew
  * Date: 15/09/2017
  */
-public class IndexTest {
-    private static final Log log = LogFactory.getLog(IndexTest.class);
+public class IndexAPI {
+    private static final Log log = LogFactory.getLog(IndexAPI.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

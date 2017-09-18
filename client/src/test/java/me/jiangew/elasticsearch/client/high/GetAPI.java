@@ -25,8 +25,8 @@ import java.util.Map;
  * Author: Jiangew
  * Date: 15/09/2017
  */
-public class GetTest {
-    private static final Log log = LogFactory.getLog(GetTest.class);
+public class GetAPI {
+    private static final Log log = LogFactory.getLog(GetAPI.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

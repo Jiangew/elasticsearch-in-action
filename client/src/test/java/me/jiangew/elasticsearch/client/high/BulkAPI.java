@@ -34,8 +34,8 @@ import java.util.concurrent.TimeUnit;
  * Author: Jiangew
  * Date: 15/09/2017
  */
-public class BulkTest {
-    private static final Log logger = LogFactory.getLog(BulkTest.class);
+public class BulkAPI {
+    private static final Log logger = LogFactory.getLog(BulkAPI.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

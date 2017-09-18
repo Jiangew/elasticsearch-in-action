@@ -26,8 +26,8 @@ import java.io.IOException;
  * Author: Jiangew
  * Date: 15/09/2017
  */
-public class DeleteTest {
-    private static final Log log = LogFactory.getLog(DeleteTest.class);
+public class DeleteAPI {
+    private static final Log log = LogFactory.getLog(DeleteAPI.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 

@@ -56,8 +56,8 @@ import java.util.concurrent.TimeUnit;
  * Author: Jiangew
  * Date: 15/09/2017
  */
-public class SearchTest {
-    private static final Log log = LogFactory.getLog(SearchTest.class);
+public class SearchAPI {
+    private static final Log log = LogFactory.getLog(SearchAPI.class);
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -267,7 +267,6 @@ public class SearchTest {
                 List<ProfileResult> profiledChildren = profileResult.getProfiledChildren();
             }
         }
-
     }
 
 }
