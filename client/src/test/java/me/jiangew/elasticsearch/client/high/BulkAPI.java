@@ -59,7 +59,7 @@ public class BulkAPI {
         );
 
         request.add(new UpdateRequest("twitter", "doc", "21")
-                            .doc(XContentType.JSON, "user", "JamesiWorks")
+                            .doc(XContentType.JSON, "user", "JamesiWork")
         );
 
         request.add(new DeleteRequest("twitter", "doc", "21"));
@@ -160,7 +160,7 @@ public class BulkAPI {
                         "message", "Elasticsearch Logstash Kibana 2017.09.15");
 
         UpdateRequest two = new UpdateRequest("twitter", "doc", "21")
-                .doc(XContentType.JSON, "user", "JamesiWorks");
+                .doc(XContentType.JSON, "user", "JamesiWork");
 
         DeleteRequest three = new DeleteRequest("twitter", "doc", "21");
 
