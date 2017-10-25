@@ -1,6 +1,13 @@
-
+# osx
 .DS_Store
-.idea/
+
+# idea
+.idea
 *.iml
-build/
-target/
+build
+target
+
+# vscode
+*.classpath
+*.project
+*.settings
