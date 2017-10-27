@@ -116,6 +116,21 @@ curl -XGET 'http://arslan.bookcs.3g.qq.com/weibo/_search?pretty=true' -H 'Conten
         "match_all" : {}
     }
 }'
+
+curl -XGET 'http://arslan.bookcs.3g.qq.com/weibo/_search?pretty=true' -H 'Content-Type: application/json' -d '
+{
+     "query": {
+          "bool": {
+               "must": [
+                    {
+                         "match_all": {}
+                    }
+               ]
+          }
+     },
+     "from": 0,
+     "size": 1
+}'
 </pre>
 
 We can also do range search (the @post_date@ was automatically identified as date)
