@@ -144,7 +144,7 @@ curl -XGET 'http://localhost:9200/_analyze?pretty&analyzer=ik_smart' -d '联想�
 }
 ```
 
-### 创建索引 newsik，设置分析器 ik，指定分词器 ik_max_word；创建类型 article，字段 subject
+### 创建索引 newsik，设置分析器 ik，指定分词器 ik_max_word；创建类型 article，给字段 subject 设置字段文本分词器和搜索词分词器
 ```sh
 curl -XPUT 'http://localhost:9200/newsik?pretty' -d '{
     "settings" : {
@@ -162,7 +162,8 @@ curl -XPUT 'http://localhost:9200/newsik?pretty' -d '{
             "properties" : {
                 "subject" : {
                     "type" : "string",
-                    "analyzer" : "ik_max_word"
+                    "analyzer" : "ik_max_word",
+                    "search_analyzer" : "ik_max_word"
                 }
             }
         }
@@ -171,6 +172,12 @@ curl -XPUT 'http://localhost:9200/newsik?pretty' -d '{
 ```
 
 ### 批量添加记录，指定元数据 _id 方便查询
+#### 单条添加 PUT
+```sh
+curl -XPUT http://localhost:9200/newsik/article/6?pretty -d '{"subject" : "郎永淳醉驾案续：朝阳法院已受理并立案" }'
+```
+
+#### 批量添加 POST
 ```sh
 curl -XPOST http://localhost:9200/newsik/article/_bulk?pretty -d '
 { "index" : { "_id" : "1" } }
@@ -187,10 +194,33 @@ curl -XPOST http://localhost:9200/newsik/article/_bulk?pretty -d '
 ```
 
 ### 查询 "希拉里和韩国"；设置高亮属性 highlight，直接显示到 html 中，被匹配到的字或词将以红色突出显示；若要用过滤搜索，直接将 match 改为 term 即可
+#### 搜索关键词分词后是 逻辑运算 or关系
 ```sh
 curl -XPOST http://localhost:9200/newsik/article/_search?pretty -d '
 {
     "query" : { "match" : { "subject" : "希拉里和韩国" }},
+    "highlight" : {
+        "pre_tags" : ["<font color='red'>"],
+        "post_tags" : ["</font>"],
+        "fields" : {
+            "subject" : {}
+        }
+    }
+}
+'
+```
+#### 多个关键词的 and搜索，必须使用bool查询
+```sh
+curl -XPOST http://localhost:9200/newsik/article/_search?pretty -d '
+{
+    "query": {
+          "bool": {
+               "must": [
+                    { "match": { "subject": "希拉里" } },
+                    { "match": { "subject": "韩国" } }
+               ]
+          }
+     },
     "highlight" : {
         "pre_tags" : ["<font color='red'>"],
         "post_tags" : ["</font>"],
