@@ -1,9 +1,5 @@
 # Elasticsearch in Action
 
-## Rest Client
-
-## High Level Rest Client
-
 ## Elasticsearch IK 分词器
 ### IK 带有两个分词器
 * ik_max_word：会将文本做最细粒度的拆分；尽可能多的拆分出词语
