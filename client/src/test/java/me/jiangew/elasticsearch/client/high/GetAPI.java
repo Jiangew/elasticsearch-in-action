@@ -39,7 +39,7 @@ public class GetAPI {
         client = new RestHighLevelClient(builder.build());
     }
 
-    public GetRequest buildReuqest() {
+    public GetRequest buildRequest() {
         return new GetRequest("twitter", "doc", "1");
     }
 
