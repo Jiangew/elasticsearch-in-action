@@ -146,6 +146,29 @@ curl -XGET 'http://arslan.bookcs.3g.qq.com/weibo/_search?pretty=true' -H 'Conten
 }'
 </pre>
 
+Delete index docs by query
+
+<pre>
+curl -XPOST "http://arslan.bookcs.3g.qq.com/notes/_delete_by_query" -H 'Content-Type: application/json' -d'
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": { "bid": "1000001281" }
+        },
+        {
+          "match": { "uid": "1009096" }
+        },
+        {
+          "match": { "uuid": "111" }
+        }
+      ]
+    }
+  }
+}'
+</pre>
+
 There are many more options to perform search, after all, it's a search product no? All the familiar Lucene queries are available through the JSON query language, or through the query parser.
 
 h3. Multi Tenant - Indices and Types
