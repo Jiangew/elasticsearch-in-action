@@ -3,7 +3,7 @@
 ## 使用「Filters」优化查询
 ElasticSearch 查询DSL允许用户使用的绝大多数查询都会有各自的标识，这些查询也以嵌套到如下的查询类型中：
 * constant_score
-* filterd
+* filtered
 * custom_filters_score
 
 为什么要这么麻烦来使用 filtering ？在什么场景下可以只使用 queries ？
